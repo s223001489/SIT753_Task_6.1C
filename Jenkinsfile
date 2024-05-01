@@ -1,14 +1,18 @@
 pipeline {
     agent any
 
+    environment {
+        MAVEN_HOME = tool 'Maven'
+    }
+
     stages {
         stage('Build') {
             steps {
-                // Use Maven to build the project
-                sh 'mvn clean package'
+                script {
+                    sh "${MAVEN_HOME}/bin/mvn clean package"
+                }
             }
         }
-        
         stage('Unit and Integration Tests') {
             steps {
                 // Run unit tests with JUnit
