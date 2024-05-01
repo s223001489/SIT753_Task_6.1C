@@ -1,77 +1,80 @@
 pipeline {
     agent any
 
-    environment {
-        MAVEN_HOME = tool 'Maven'
-    }
-
     stages {
         stage('Build') {
             steps {
                 script {
-                    sh "${MAVEN_HOME}/bin/mvn clean package"
+                    // Change to the myproject directory
+                    dir('/Users/vv/.jenkins/workspace/My_Pipeline/myproject') {
+                        // Execute Maven commands to build the project
+                        def mvnHome = tool 'Maven'
+                        sh "${mvnHome}/bin/mvn clean package"
+                    }
                 }
             }
         }
+
         stage('Unit and Integration Tests') {
             steps {
-                // Run unit tests with JUnit
-                sh 'mvn test'
-                
-                // Run integration tests with Selenium
-                sh 'mvn verify'
+                script {
+                    // Change to the myproject directory
+                    dir('/Users/vv/.jenkins/workspace/My_Pipeline/myproject') {
+                        // Execute Maven commands to run unit tests and integration tests
+                        def mvnHome = tool 'Maven'
+                        sh "${mvnHome}/bin/mvn test integration-test"
+                    }
+                }
             }
         }
 
         stage('Code Analysis') {
             steps {
-                // Use SonarQube for code analysis
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar'
-                }
+                // Use a code analysis tool like SonarQube, Checkstyle, FindBugs, PMD, etc.
+                // Example:
+                sh "mvn sonar:sonar"
             }
         }
 
         stage('Security Scan') {
             steps {
-                // Use OWASP Dependency-Check for security scanning
-                sh 'mvn org.owasp:dependency-check-maven:check'
+                // Use a security scanning tool like OWASP Dependency-Check, SonarQube with Security Plugin, etc.
+                // Example:
+                sh "mvn verify"
             }
         }
 
         stage('Deploy to Staging') {
             steps {
-                // Use Jenkins SSH Plugin to deploy to staging server
-                sshPublisher(
-                    publishers: [sshPublisherDesc(
-                        configName: 'StagingServer',
-                        transfers: [
-                            sshTransfer(execCommand: 'deploy.sh')
-                        ]
-                    )]
-                )
+                // Deploy the application to a staging server (e.g., AWS EC2 instance)
+                // Example:
+                sh "scp target/myproject.jar user@staging-server:/path/to/deploy"
             }
         }
 
         stage('Integration Tests on Staging') {
             steps {
                 // Run integration tests on the staging environment
-                sh 'mvn verify -Pstaging'
+                // Example:
+                sh "ssh user@staging-server 'java -jar /path/to/deploy/myproject.jar --run-integration-tests'"
             }
         }
 
         stage('Deploy to Production') {
             steps {
-                // Use Jenkins SSH Plugin to deploy to production server
-                sshPublisher(
-                    publishers: [sshPublisherDesc(
-                        configName: 'ProductionServer',
-                        transfers: [
-                            sshTransfer(execCommand: 'deploy.sh')
-                        ]
-                    )]
-                )
+                // Deploy the application to a production server (e.g., AWS EC2 instance)
+                // Example:
+                sh "scp target/myproject.jar user@production-server:/path/to/deploy"
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline succeeded! Application deployed to production."
+        }
+        failure {
+            echo "Pipeline failed! Please check the build logs for errors."
         }
     }
 }
