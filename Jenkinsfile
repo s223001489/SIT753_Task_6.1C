@@ -65,7 +65,8 @@ pipeline {
                 body: "Pipeline failed. Please check the logs.\n${buildLog}",
                 to: 'rsrivarshini313@gmail.com'
             )
-        }
+              }
         echo 'Pipeline failed! Please check the build logs.'
-    }
+           }
+      }
 }
