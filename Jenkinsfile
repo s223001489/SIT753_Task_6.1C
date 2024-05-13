@@ -48,9 +48,10 @@ pipeline {
    post {
        success {
            script {
+               def buildLogs = currentBuild.rawBuild.getLog(1000) // Fetch last 1000 lines of build logs
                mail (
                    subject: 'Pipeline Success - Application Deployed',
-                   body: 'Pipeline completed successfully.',
+                   body: "Pipeline completed successfully.\n\nBuild Logs:\n${buildLogs}",
                    to: 'rsrivarshini313@gmail.com'
                )
            }
@@ -58,9 +59,10 @@ pipeline {
        }
        failure {
            script {
+               def buildLogs = currentBuild.rawBuild.getLog(1000) // Fetch last 1000 lines of build logs
                mail (
                    subject: 'Pipeline Failure - Application Deployment Failed',
-                   body: 'Pipeline failed. Please check the logs.',
+                   body: "Pipeline failed. Please check the logs below:\n${buildLogs}",
                    to: 'rsrivarshini313@gmail.com'
                )
            }
