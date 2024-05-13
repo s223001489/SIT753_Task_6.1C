@@ -45,7 +45,7 @@ pipeline {
             script {
                 emailext body: "Pipeline ${currentBuild.result}: ${env.BUILD_URL}",
                          subject: "Pipeline ${currentBuild.result}: ${env.JOB_NAME}",
-                         to: 'rsrivarshini313@gmail.com',
+                         to: 'mnalamaru4@gmail.com',
                          attachLog: true,
                          attachmentsPattern: '*'
             }
