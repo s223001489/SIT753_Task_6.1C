@@ -46,27 +46,26 @@ pipeline {
        }
    }
    post {
-       success {
-           script {
-               def buildLogs = currentBuild.rawBuild.getLog(1000) // Fetch last 1000 lines of build logs
-               mail (
-                   subject: 'Pipeline Success - Application Deployed',
-                   body: "Pipeline completed successfully.\n\nBuild Logs:\n${buildLogs}",
-                   to: 'rsrivarshini313@gmail.com'
-               )
-           }
-           echo 'Pipeline succeeded! Application deployed successfully.'
-       }
-       failure {
-           script {
-               def buildLogs = currentBuild.rawBuild.getLog(1000) // Fetch last 1000 lines of build logs
-               mail (
-                   subject: 'Pipeline Failure - Application Deployment Failed',
-                   body: "Pipeline failed. Please check the logs below:\n${buildLogs}",
-                   to: 'rsrivarshini313@gmail.com'
-               )
-           }
-           echo 'Pipeline failed! Please check the build logs.'
-       }
-   }
+    success {
+        script {
+            def buildLog = currentBuild.rawBuild.getLog(1000)  // Example: Get last 1000 lines of build log
+            mail (
+                subject: 'Pipeline Success - Application Deployed',
+                body: "Pipeline completed successfully. Build Log:\n${buildLog}",
+                to: 'rsrivarshini313@gmail.com'
+            )
+        }
+        echo 'Pipeline succeeded! Application deployed successfully.'
+    }
+    failure {
+        script {
+            def buildLog = currentBuild.rawBuild.getLog(1000)  // Example: Get last 1000 lines of build log
+            mail (
+                subject: 'Pipeline Failure - Application Deployment Failed',
+                body: "Pipeline failed. Please check the logs.\n${buildLog}",
+                to: 'rsrivarshini313@gmail.com'
+            )
+        }
+        echo 'Pipeline failed! Please check the build logs.'
+    }
 }
