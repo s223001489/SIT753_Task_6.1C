@@ -40,15 +40,16 @@ pipeline {
         }
     }
     
-   post {
-        always {
-            script {
-                emailext body: "Pipeline ${currentBuild.result}: ${env.BUILD_URL}",
-                         subject: "Pipeline ${currentBuild.result}: ${env.JOB_NAME}",
-                         to: 'rsrivarshini313@gmail.com',
-                         attachLog: true,
-                         attachmentsPattern: '*'
-            }
+  post {
+    always {
+        script {
+            echo "Sending email notification..."
+            emailext body: "Pipeline ${currentBuild.result}: ${env.BUILD_URL}",
+                     subject: "Pipeline ${currentBuild.result}: ${env.JOB_NAME}",
+                     to: 'rsrivarshini313@gmail.com',
+                     attachLog: true,
+                     attachmentsPattern: '*'
+            echo "Email notification sent."
         }
     }
 }
