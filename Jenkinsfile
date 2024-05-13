@@ -50,6 +50,7 @@ pipeline {
                      attachLog: true,
                      attachmentsPattern: '*'
             echo "Email notification sent."
-        }
-    }
+              }
+          }
+      }
 }
